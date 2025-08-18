@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36310.24
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Student", "StudentInfo\Student.csproj", "{FF5AE94E-59A9-4074-A3FA-CC287072ED0F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Student Management System", "StudentInfo\Student Management System.csproj", "{FF5AE94E-59A9-4074-A3FA-CC287072ED0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Student.Services", "Student.Services\Student.Services.csproj", "{F2E40724-2D65-41B1-8E0C-3113C0621F0F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMS.Services", "Student.Services\SMS.Services.csproj", "{F2E40724-2D65-41B1-8E0C-3113C0621F0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Student.DataAccess", "Student.DataAccess\Student.DataAccess.csproj", "{68D77C79-4D7D-4F23-8C01-F92B3A030A2C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMS.Domain", "Student.DataAccess\SMS.Domain.csproj", "{68D77C79-4D7D-4F23-8C01-F92B3A030A2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMS.Infrastructure", "SMS.Infrastructure\SMS.Infrastructure.csproj", "{E431E9D2-9780-4D05-93F6-5A53E59540B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{68D77C79-4D7D-4F23-8C01-F92B3A030A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68D77C79-4D7D-4F23-8C01-F92B3A030A2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68D77C79-4D7D-4F23-8C01-F92B3A030A2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E431E9D2-9780-4D05-93F6-5A53E59540B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E431E9D2-9780-4D05-93F6-5A53E59540B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E431E9D2-9780-4D05-93F6-5A53E59540B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E431E9D2-9780-4D05-93F6-5A53E59540B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
