@@ -9,7 +9,7 @@ namespace Student_Management_System.Controllers
         [HttpGet ("throw-exception")]
         public IActionResult ThrowException()
         {
-            throw new Exception("This is a test exception to demonstrate the global exception handler.");
+            throw new Exception("This is a test exception to demonstrate the global exception handler .");
         }
     }
 }
