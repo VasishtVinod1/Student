@@ -1,37 +1,53 @@
 using Serilog;
+using Student_Management_System.Data;
 
-var builder = WebApplication.CreateBuilder(args);
-
-Log.Logger = new LoggerConfiguration()
+try
+{
+    // 1. Configure Serilog before builder
+    Log.Logger = new LoggerConfiguration()
         .WriteTo.Console()
+        .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
         .Enrich.FromLogContext()
         .CreateLogger();
-builder.Host.UseSerilog();
 
-// Add services to the container.
+    // 2. Create builder
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    // Hook Serilog into logging
+    builder.Host.UseSerilog();
 
+    // Add services
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+    builder.Services.AddSingleton<IStudentRepository , StudentRepository>();
 
+    var app = builder.Build();
 
-var app = builder.Build();
+    // 3. Register Global Exception Middleware
+    app.UseMiddleware<Student_Management_System.Middleware.GlobalExceptionHandler>();
+    
 
-app.UseMiddleware<Student_Management_System.Middleware.GlobalExceptionHandler>();
+    // Pipeline
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseHttpsRedirection();
+    app.UseAuthorization();
+    app.MapControllers();
+
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+catch (Exception ex)
+{
+    // 4. Catch startup errors
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    // 5. Cleanup
+    Log.CloseAndFlush();
+}
