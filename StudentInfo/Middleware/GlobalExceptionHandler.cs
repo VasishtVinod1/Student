@@ -26,7 +26,8 @@ namespace Student_Management_System.Middleware
                 //Console.WriteLine($"Message: {ex.Message}");
                 //Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 _logger.LogError(ex, "Unhandled exception occurred while processing the request.");
-
+                _logger.LogError($"Message: {ex.Message}");
+                _logger.LogError($"Stack trace: {ex.StackTrace}");
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 context.Response.ContentType = "application/json";
 

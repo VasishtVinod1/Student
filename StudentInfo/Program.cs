@@ -43,11 +43,9 @@ try
 }
 catch (Exception ex)
 {
-    // 4. Catch startup errors
     Log.Fatal(ex, "Application terminated unexpectedly");
 }
 finally
 {
-    // 5. Cleanup
     Log.CloseAndFlush();
 }
