@@ -24,3 +24,4 @@ namespace SMS.Domain.Repositories
 
         public ICollection<Enrollment> Enrollment { get; set; } = new List<Enrollment>();
     }
+}

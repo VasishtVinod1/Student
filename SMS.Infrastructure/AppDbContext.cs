@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SMS.Domain.Repositories;
-using Student_Management_System.Domain;
+using SMS.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;

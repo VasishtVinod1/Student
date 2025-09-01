@@ -23,7 +23,7 @@ namespace SMS.Domain.Repositories
         public bool IsActive { get; set; }
 
         [ForeignKey(nameof(StudentId))]
-        public Student Student { get; set; } = null!;
+        public Student? Student { get; set; } = null!;
 
         [ForeignKey(nameof(CourseId))]
         public Course Course { get; set; } = null!;

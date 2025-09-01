@@ -26,7 +26,7 @@ namespace SMS.Domain.Repositories
         public string Gender { get; set; }
 
         [Required]
-        //[Index(nameof(Email(IsUnique = true)))]
+        
         public string Email { get; set; }
 
         [Required]

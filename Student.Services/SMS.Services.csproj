@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="15.0.1" />
+    <PackageReference Include="DotLiquid" Version="2.3.197" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
@@ -15,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SMS.Infrastructure\SMS.Infrastructure.csproj" />
     <ProjectReference Include="..\Student.DataAccess\SMS.Domain.csproj" />
+    
   </ItemGroup>
 
 </Project>
