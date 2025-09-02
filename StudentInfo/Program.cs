@@ -1,5 +1,12 @@
 using Serilog;
+using SMS.Services.Implementation;
+using SMS.Services.Interfaces;
 using Student_Management_System.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.SqlServer;
+using SMS.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 
 try
 {
@@ -17,10 +24,17 @@ try
     builder.Host.UseSerilog();
 
     // Add services
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+    //builder.Services.AddAutoMapper(typeof(StudentProfile));
+
+
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    builder.Services.AddSingleton<IStudentRepository , StudentRepository>();
+    builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+    builder.Services.AddScoped<IStudentService, StudentServices>();
 
     var app = builder.Build();
 
