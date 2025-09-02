@@ -10,16 +10,16 @@ namespace SMS.Services.Interfaces
 {
     public interface IStudentService
     {
-    Task<IEnumerable<StudentDto>> GetAll();
+    Task<IEnumerable<StudentResponseDto>> GetAll();
 
-    Task<StudentDto?> GetById(int id);
+    Task<StudentResponseDto?> GetById(int id);
 
-    Task<StudentDTO_POST> Add(StudentDTO_POST studentdtopost);
+    Task<StudentCreateDto> Add(StudentCreateDto dto);
 
-    Task<StudentDTO_POST> Update(StudentDTO_POST studentdtopost);
+    Task<StudentUpdatedto> Update(int id,StudentUpdatedto dto);
 
     Task<Student>DeleteById(int id);
 
-    Task<StudentDTO_POST> Patch(int id, StudentDTO_POST studentdtopost);
+    Task<StudentUpdatedto> Patch(int id, StudentUpdatedto dto);
     }
 }

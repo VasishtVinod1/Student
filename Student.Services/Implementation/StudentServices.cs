@@ -25,14 +25,14 @@ namespace SMS.Services.Implementation
           
         }
 
-        public async Task<IEnumerable<StudentDto>> GetAll()
+        public async Task<IEnumerable<StudentResponseDto>> GetAll()
         {
             var students = await _context.Students
                 .Include(s => s.Enrollment)
                     .ThenInclude(e => e.Course)
                 .ToListAsync();
 
-            var studentDtos = students.Select(s => new StudentDto
+            var studentDtos = students.Select(s => new StudentResponseDto
             {
                 StudentId = s.StudentId,
                 FirstName = s.FirstName,
@@ -40,15 +40,14 @@ namespace SMS.Services.Implementation
                 Email = s.Email,
                 DateOfBirth = s.DateOfBirth,
                 Gender = s.Gender,
-                Enrollments = s.Enrollment.Select(e => new EnrollmentDto
+                Enrollments = s.Enrollment.Select(e => new EnrollmentResponseDto
                 {
                     EnrollmentId = e.EnrollmentId,
                     CourseId = e.CourseId,
-                    Course = new CourseDto
+                    Course = new CourseResponseDto
                     {
                         CourseId = e.Course.CourseId,
                         CourseName = e.Course.CourseName
-                        
                     }
                 }).ToList()
             }).ToList();
@@ -56,7 +55,8 @@ namespace SMS.Services.Implementation
             return studentDtos;
         }
 
-        public async Task<StudentDto?> GetById(int id)
+
+        public async Task<StudentResponseDto?> GetById(int id)
         {
             var student = await _context.Students
                 .Include(s => s.Enrollment)
@@ -66,7 +66,7 @@ namespace SMS.Services.Implementation
             if (student == null)
                 return null;
 
-            var studentDto = new StudentDto
+            var studentDto = new StudentResponseDto
             {
                 StudentId = student.StudentId,
                 FirstName = student.FirstName,
@@ -74,11 +74,11 @@ namespace SMS.Services.Implementation
                 Email = student.Email,
                 DateOfBirth = student.DateOfBirth,
                 Gender = student.Gender,
-                Enrollments = student.Enrollment.Select(e => new EnrollmentDto
+                Enrollments = student.Enrollment.Select(e => new EnrollmentResponseDto
                 {
                     EnrollmentId = e.EnrollmentId,
                     CourseId = e.CourseId,
-                    Course = new CourseDto
+                    Course = new CourseResponseDto
                     {
                         CourseId = e.Course.CourseId,
                         CourseName = e.Course.CourseName
@@ -90,110 +90,163 @@ namespace SMS.Services.Implementation
         }
 
 
-        public async Task<StudentDTO_POST> Add(StudentDTO_POST studentdtopost)
+
+        public async Task<StudentCreateDto> Add(StudentCreateDto dto)
         {
-
-
             var student = new Student
             {
-                StudentId = studentdtopost.StudentId,
-                FirstName = studentdtopost.FirstName,
-                LastName = studentdtopost.LastName,
-                DateOfBirth = studentdtopost.DateOfBirth,
-                Gender = studentdtopost.Gender,
-                Email = studentdtopost.Email,
-                PhoneNumber = studentdtopost.PhoneNumber,
-                Address = studentdtopost.Address,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-
-                Enrollment = studentdtopost.Enrollments.Select(e => new Enrollment
-                {
-                    EnrollmentId = e.EnrollmentId,
-                    StudentId = e.StudentId,
-                    CourseId = e.CourseId,
-                    EnrollmentDate = e.EnrollmentDate,
-                    IsActive = e.IsActive
-                }).ToList()
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                DateOfBirth = dto.DateOfBirth,
+                Gender = dto.Gender,
+                Email = dto.Email,
+                PhoneNumber = dto.PhoneNumber,
+                Address = dto.Address,
+                CreatedAt = DateTime.Now
             };
 
-            await _context.Students.AddAsync(student);
-            await _context.SaveChangesAsync();
-
-            return studentdtopost;
-        }
-
-        public async Task<StudentDTO_POST?> Update(StudentDTO_POST studentdtopost)
-        {
-            var existing = await _context.Students.FindAsync(studentdtopost.StudentId);
-            if (existing == null) return null;
-
-            existing.FirstName = studentdtopost.FirstName;
-            existing.LastName = studentdtopost.LastName;
-            existing.Email = studentdtopost.Email;
-            existing.PhoneNumber = studentdtopost.PhoneNumber;
-            existing.Address = studentdtopost.Address;
-            existing.DateOfBirth = studentdtopost.DateOfBirth;
-            existing.Gender = studentdtopost.Gender;
-            existing.UpdatedAt = DateTime.UtcNow;
-
-            existing.Enrollment.Clear();
-            
-            existing.Enrollment = studentdtopost.Enrollments.Select(e => new Enrollment
+            // Handle Enrollments
+            foreach (var e in dto.Enrollments)
             {
-                CourseId = e.CourseId,
-                EnrollmentDate = e.EnrollmentDate,
-                IsActive= e.IsActive,
-            }).ToList();
-
-            await _context.SaveChangesAsync();
-            return studentdtopost;
-        }
-
-
-        public async Task<Student?> DeleteById(int id)
-        {
-            var existing = await _context.Students.FindAsync(id);
-            if (existing == null)
-            {
-                return null;
-            }
-            _context.Students.Remove(existing);
-            await _context.SaveChangesAsync();
-            return existing;
-        }
-
-        public async Task<StudentDTO_POST?> Patch(int id, StudentDTO_POST studentdtopost)
-        {
-            var existing = await _context.Students.FindAsync(id);
-            if (existing == null) return null;
-
-            existing.FirstName = studentdtopost.FirstName ?? existing.FirstName;
-            existing.LastName = studentdtopost.LastName ?? existing.LastName;
-            existing.Email = studentdtopost.Email ?? existing.Email;
-            existing.PhoneNumber = studentdtopost.PhoneNumber ?? existing.PhoneNumber;
-            existing.Address = studentdtopost.Address ?? existing.Address;
-            existing.DateOfBirth = studentdtopost.DateOfBirth != default ? studentdtopost.DateOfBirth : existing.DateOfBirth;
-            existing.Gender = studentdtopost.Gender ?? existing.Gender;
-            existing.UpdatedAt = DateTime.UtcNow;
-
-            if(studentdtopost.Enrollments != null && studentdtopost.Enrollments.Count > 0)
-            {
-                existing.Enrollment.Clear();
-                existing.Enrollment = studentdtopost.Enrollments.Select(e => new Enrollment
+                student.Enrollment.Add(new Enrollment
                 {
                     CourseId = e.CourseId,
-                    EnrollmentDate = e.EnrollmentDate,
                     IsActive = e.IsActive,
-                }).ToList();
+                    EnrollmentDate = DateTime.Now
+                });
             }
 
+            _context.Students.Add(student);
             await _context.SaveChangesAsync();
 
-            studentdtopost.StudentId = existing.StudentId;
-            return studentdtopost;
+            // Return response
+            return dto;
         }
 
+        // ---------------------- UPDATE (PUT) ----------------------
+        public async Task<StudentUpdatedto> Update(int id, StudentUpdatedto dto)
+        {
+            var existing = await _context.Students
+                .Include(s => s.Enrollment)
+                .FirstOrDefaultAsync(s => s.StudentId == id);
+
+            if (existing == null)
+                return null;
+
+            existing.FirstName = dto.FirstName;
+            existing.LastName = dto.LastName;
+            existing.DateOfBirth = dto.DateOfBirth ?? existing.DateOfBirth;
+            existing.Gender = dto.Gender ?? existing.Gender;
+            existing.Email = dto.Email ?? existing.Email;
+            existing.PhoneNumber = dto.PhoneNumber ?? existing.PhoneNumber;
+            existing.Address = dto.Address ?? existing.Address;
+            existing.UpdatedAt = DateTime.Now;
+
+            // replace enrollments
+            if (dto.Enrollments != null)
+            {
+                foreach (var e in dto.Enrollments)
+                {
+                    // Try to find existing enrollment
+                    var existingEnrollment = existing.Enrollment
+                        .FirstOrDefault(en => en.EnrollmentId == e.EnrollmentId);
+
+                    if (existingEnrollment != null)
+                    {
+                        // Update existing enrollment
+                        existingEnrollment.CourseId = e.CourseId;
+                        existingEnrollment.IsActive = e.IsActive ?? existingEnrollment.IsActive;
+                        existingEnrollment.EnrollmentDate = DateTime.Now;
+                    }
+                    else
+                    {
+                        // Add new enrollment if it doesn't exist
+                        existing.Enrollment.Add(new Enrollment
+                        {
+                            CourseId = e.CourseId,
+                            IsActive = e.IsActive ?? true,
+                            EnrollmentDate = DateTime.Now
+                        });
+                    }
+                }
+            }
+
+
+
+            _context.Students.Update(existing);
+            await _context.SaveChangesAsync();
+
+            return dto;
+
+        }
+
+
+
+        // ---------------------- PATCH ----------------------
+        public async Task<StudentUpdatedto?> Patch(int id, StudentUpdatedto dto)
+        {
+            var existing = await _context.Students
+                .Include(s => s.Enrollment)
+                .FirstOrDefaultAsync(s => s.StudentId == id);
+
+            if (existing == null) return null;
+
+            // Replace non-null properties automatically using null-coalescing
+            existing.FirstName = dto.FirstName ?? existing.FirstName;
+            existing.LastName = dto.LastName ?? existing.LastName;
+            existing.DateOfBirth = dto.DateOfBirth ?? existing.DateOfBirth;
+            existing.Gender = dto.Gender ?? existing.Gender;
+            existing.Email = dto.Email ?? existing.Email;
+            existing.PhoneNumber = dto.PhoneNumber ?? existing.PhoneNumber;
+            existing.Address = dto.Address ?? existing.Address;
+            existing.UpdatedAt = DateTime.Now;
+
+            // If enrollments exist, just replace them (simplest approach)
+            if (dto.Enrollments != null)
+            {
+                foreach (var e in dto.Enrollments)
+                {
+                    // Try to find existing enrollment
+                    var existingEnrollment = existing.Enrollment
+                        .FirstOrDefault(en => en.EnrollmentId == e.EnrollmentId);
+
+                    if (existingEnrollment != null)
+                    {
+                        // Update existing enrollment
+                        existingEnrollment.CourseId = e.CourseId;
+                        existingEnrollment.IsActive = e.IsActive ?? existingEnrollment.IsActive;
+                        existingEnrollment.EnrollmentDate = DateTime.Now;
+                    }
+                    else
+                    {
+                        // Add new enrollment if it doesn't exist
+                        existing.Enrollment.Add(new Enrollment
+                        {
+                            CourseId = e.CourseId,
+                            IsActive = e.IsActive ?? true,
+                            EnrollmentDate = DateTime.Now
+                        });
+                    }
+                }
+            }
+
+
+            await _context.SaveChangesAsync();
+            return dto;
+        }
+
+
+        // ---------------------- DELETE ----------------------
+        public async Task<Student> DeleteById(int id)
+        {
+            var student = await _context.Students.FindAsync(id);
+            if (student == null)
+                return null;
+
+            _context.Students.Remove(student);
+            await _context.SaveChangesAsync();
+            return student;
+        }
     }
 }
 
