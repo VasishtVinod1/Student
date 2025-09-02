@@ -15,7 +15,7 @@ namespace SMS.API.Controllers
             _studentService = studentService;
         }
 
-        // ---------------------- GET ALL ----------------------
+       
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -23,7 +23,7 @@ namespace SMS.API.Controllers
             return Ok(students);
         }
 
-        // ---------------------- GET BY ID ----------------------
+       
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -34,7 +34,7 @@ namespace SMS.API.Controllers
             return Ok(student);
         }
 
-        // ---------------------- POST ----------------------
+      
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] StudentCreateDto dto)
         {
@@ -46,7 +46,7 @@ namespace SMS.API.Controllers
         }
 
 
-        // ---------------------- PUT ----------------------
+     
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] StudentUpdatedto dto)
         {
@@ -60,7 +60,7 @@ namespace SMS.API.Controllers
             return Ok(updated);
         }
 
-        // ---------------------- PATCH ----------------------
+       
         [HttpPatch("{id}")]
         public async Task<IActionResult> Patch(int id, [FromBody] StudentUpdatedto dto)
         {
@@ -71,7 +71,7 @@ namespace SMS.API.Controllers
             return Ok(updated);
         }
 
-        // ---------------------- DELETE ----------------------
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

@@ -105,7 +105,7 @@ namespace SMS.Services.Implementation
                 CreatedAt = DateTime.Now
             };
 
-            // Handle Enrollments
+            
             foreach (var e in dto.Enrollments)
             {
                 student.Enrollment.Add(new Enrollment
@@ -119,11 +119,11 @@ namespace SMS.Services.Implementation
             _context.Students.Add(student);
             await _context.SaveChangesAsync();
 
-            // Return response
+            
             return dto;
         }
 
-        // ---------------------- UPDATE (PUT) ----------------------
+       
         public async Task<StudentUpdatedto> Update(int id, StudentUpdatedto dto)
         {
             var existing = await _context.Students
@@ -142,25 +142,25 @@ namespace SMS.Services.Implementation
             existing.Address = dto.Address ?? existing.Address;
             existing.UpdatedAt = DateTime.Now;
 
-            // replace enrollments
+            
             if (dto.Enrollments != null)
             {
                 foreach (var e in dto.Enrollments)
                 {
-                    // Try to find existing enrollment
+                   
                     var existingEnrollment = existing.Enrollment
                         .FirstOrDefault(en => en.EnrollmentId == e.EnrollmentId);
 
                     if (existingEnrollment != null)
                     {
-                        // Update existing enrollment
+                       
                         existingEnrollment.CourseId = e.CourseId;
                         existingEnrollment.IsActive = e.IsActive ?? existingEnrollment.IsActive;
                         existingEnrollment.EnrollmentDate = DateTime.Now;
                     }
                     else
                     {
-                        // Add new enrollment if it doesn't exist
+                      
                         existing.Enrollment.Add(new Enrollment
                         {
                             CourseId = e.CourseId,
@@ -182,7 +182,7 @@ namespace SMS.Services.Implementation
 
 
 
-        // ---------------------- PATCH ----------------------
+        
         public async Task<StudentUpdatedto?> Patch(int id, StudentUpdatedto dto)
         {
             var existing = await _context.Students
@@ -191,7 +191,7 @@ namespace SMS.Services.Implementation
 
             if (existing == null) return null;
 
-            // Replace non-null properties automatically using null-coalescing
+           
             existing.FirstName = dto.FirstName ?? existing.FirstName;
             existing.LastName = dto.LastName ?? existing.LastName;
             existing.DateOfBirth = dto.DateOfBirth ?? existing.DateOfBirth;
@@ -201,25 +201,25 @@ namespace SMS.Services.Implementation
             existing.Address = dto.Address ?? existing.Address;
             existing.UpdatedAt = DateTime.Now;
 
-            // If enrollments exist, just replace them (simplest approach)
+         
             if (dto.Enrollments != null)
             {
                 foreach (var e in dto.Enrollments)
                 {
-                    // Try to find existing enrollment
+                  
                     var existingEnrollment = existing.Enrollment
                         .FirstOrDefault(en => en.EnrollmentId == e.EnrollmentId);
 
                     if (existingEnrollment != null)
                     {
-                        // Update existing enrollment
+                       
                         existingEnrollment.CourseId = e.CourseId;
                         existingEnrollment.IsActive = e.IsActive ?? existingEnrollment.IsActive;
                         existingEnrollment.EnrollmentDate = DateTime.Now;
                     }
                     else
                     {
-                        // Add new enrollment if it doesn't exist
+                        
                         existing.Enrollment.Add(new Enrollment
                         {
                             CourseId = e.CourseId,
@@ -236,7 +236,7 @@ namespace SMS.Services.Implementation
         }
 
 
-        // ---------------------- DELETE ----------------------
+        
         public async Task<Student> DeleteById(int id)
         {
             var student = await _context.Students.FindAsync(id);
