@@ -8,6 +8,7 @@ using SMS.Services.DTO;
 using SMS.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -93,6 +94,8 @@ namespace SMS.Services.Implementation
 
         public async Task<StudentCreateDto> Add(StudentCreateDto dto)
         {
+            var validationContext = new ValidationContext(dto);
+            Validator.ValidateObject(dto, validationContext, validateAllProperties: true);
             var student = new Student
             {
                 FirstName = dto.FirstName,
@@ -102,19 +105,26 @@ namespace SMS.Services.Implementation
                 Email = dto.Email,
                 PhoneNumber = dto.PhoneNumber,
                 Address = dto.Address,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+
+                Enrollment = dto.Enrollments.Select(e => new Enrollment
+                {
+                    CourseId = e.CourseId,
+                    IsActive = e.IsActive ,
+                    EnrollmentDate = DateTime.Now
+                }).ToList()
             };
 
             
-            foreach (var e in dto.Enrollments)
-            {
-                student.Enrollment.Add(new Enrollment
-                {
-                    CourseId = e.CourseId,
-                    IsActive = e.IsActive,
-                    EnrollmentDate = DateTime.Now
-                });
-            }
+            //foreach (var e in dto.Enrollments)
+            //{
+            //    student.Enrollment.Add(new Enrollment
+            //    {
+            //        CourseId = e.CourseId,
+            //        IsActive = e.IsActive,
+            //        EnrollmentDate = DateTime.Now
+            //    });
+            //}
 
             _context.Students.Add(student);
             await _context.SaveChangesAsync();

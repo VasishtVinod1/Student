@@ -14,7 +14,7 @@ namespace SMS.Infrastructure
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
-        public DbSet<Domain.Repositories.Student> Students { get; set; }
+        public virtual DbSet<Domain.Repositories.Student> Students { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
 
