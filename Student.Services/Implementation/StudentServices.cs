@@ -115,16 +115,7 @@ namespace SMS.Services.Implementation
                 }).ToList()
             };
 
-            
-            //foreach (var e in dto.Enrollments)
-            //{
-            //    student.Enrollment.Add(new Enrollment
-            //    {
-            //        CourseId = e.CourseId,
-            //        IsActive = e.IsActive,
-            //        EnrollmentDate = DateTime.Now
-            //    });
-            //}
+           
 
             _context.Students.Add(student);
             await _context.SaveChangesAsync();
@@ -249,7 +240,8 @@ namespace SMS.Services.Implementation
         
         public async Task<Student> DeleteById(int id)
         {
-            var student = await _context.Students.FindAsync(id);
+            var student = await _context.Students.FirstOrDefaultAsync
+                (s => s.StudentId==id);
             if (student == null)
                 return null;
 

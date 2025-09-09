@@ -37,13 +37,6 @@ namespace SMS.Test.Service_Test
            
             var mockDbSet = students.BuildMockDbSet();
 
-            mockDbSet.Setup(m => m.FindAsync(It.IsAny<object[]>()))
-            .ReturnsAsync((object[] ids) =>
-            {
-                var id = (int)ids[0];
-                return students.FirstOrDefault(s => s.StudentId == id);
-            });
-
             _mockContext = new Mock<AppDbContext>(new DbContextOptions<AppDbContext>());
             _mockContext.Setup(c => c.Students).Returns(mockDbSet.Object);
             _mockContext.Setup(c => c.SaveChangesAsync(default)).ReturnsAsync(1);
@@ -51,10 +44,7 @@ namespace SMS.Test.Service_Test
           
             _studentService = new StudentServices(_mockContext.Object);
         }
-
-
-
-        
+                
         [TestMethod]
         public async Task GetAll_ShouldReturnAllStudents()
         {
