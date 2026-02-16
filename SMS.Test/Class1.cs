@@ -1,4 +1,4 @@
-﻿namespace SMS.Infrastructure
+﻿namespace SMS.Test
 {
     public class Class1
     {
